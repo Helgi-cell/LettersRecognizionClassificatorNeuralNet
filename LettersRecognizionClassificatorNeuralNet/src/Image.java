@@ -13,8 +13,9 @@ import java.util.List;
 public class Image {
     public static void main(String[] args) throws IOException, InterruptedException {
 
-        String [] files = new String [] {"a1.png"//, "a2.png","a3.png","a4.png","a5.png","a6.png","a7.png","a8.png",
-                                         //"a9.png", "a10.png","a11.png","a12.png","a13.png","a14.png","a15.png","a16.png"
+        String [] files = new String [] {
+                                         "a1.png", "a2.png","a3.png","a4.png","a5.png","a6.png","a7.png","a8.png",
+                                         "a9.png", "a10.png","a11.png","a12.png","a13.png","a14.png","a15.png","a16.png"
                                         };
         Character letter = 'a';
 
@@ -22,7 +23,8 @@ public class Image {
         outByLetter.add(100.0d);
 
 
-            OperatingImage picture = new OperatingImage(files);
+            //OperatingImage picture = new OperatingImage(files);
+            OperatingImage picture = new OperatingImage(letter);
             List<NeuralNetForImages> arrTemplates = new ArrayList<>();
 
             for (List<Double> input : picture.learnInputData){

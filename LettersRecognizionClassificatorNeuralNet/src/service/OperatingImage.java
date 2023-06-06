@@ -16,6 +16,23 @@ public class OperatingImage {
     public List<List<Double>> learnInputData = new ArrayList<>();
     public List<List<Double>> learnOutputData = new ArrayList<>();
 
+
+    public OperatingImage(Character character) throws IOException, InterruptedException {
+
+        File folder = new File("images/" + character + "/");
+        File[] files = folder.listFiles();
+        for (File file : files) {
+            if (file.isFile()) {
+                learnInputData.add(grabPixels(readFromFile(file)));
+            }
+        }
+
+       /* while (readFromFile("images/" + character + "/" + character + "*.png") != null){
+            String fileName = "images/" + character + "/"  + character + "*.png";
+            learnInputData.add(grabPixels(readFromFile(fileName)));
+        }*/
+    }
+
     public OperatingImage(String [] fileName) throws IOException, InterruptedException {
         for(int i = 0; i < fileName.length; i++) {
             learnInputData.add(grabPixels(readFromFile(fileName[i])));
@@ -23,8 +40,14 @@ public class OperatingImage {
     }
 
 
+    public BufferedImage readFromFile(File file) throws IOException {
+        //File sourceimage = new File("images/a/" + fileName);
+        BufferedImage image = ImageIO.read(file);
+        return image;
+    }
+
     public BufferedImage readFromFile(String fileName) throws IOException {
-        File sourceimage = new File(fileName);
+        File sourceimage = new File("images/a/" + fileName);
         BufferedImage image = ImageIO.read(sourceimage);
         return image;
     }
