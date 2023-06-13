@@ -1,7 +1,10 @@
 import Api.FinctionsApi.FunctionEncountingNodesInterface;
 import Api.NeuralNetApi.NeuralNetI;
-import Entity.network.PredictiveNetwork;
-import Serializator.PredictiveNetworkSerializator;
+import Entity.network.ImageClassificatorNetwork;
+
+import serializator.ImagesClassificatorSerializator;
+import service.BipolarSigmoidFunction;
+import service.NeuralNetForImages;
 import service.SigmoidFunction;
 
 import java.io.Serializable;
@@ -9,24 +12,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PredictiveNetworkInitAndLearn implements Serializable {
-    List<List<Double>> learningData = new ArrayList<>();
-    List<List<Double>> outputData = new ArrayList<>();
+    public List<List<Double>> learningData = new ArrayList<>();
+    public List<List<Double>> outputData = new ArrayList<>();
+
+    public Character[] letters = new Character[] { 'a', 'o', 'i' , 't', 'm' , 'w'
+
+    };
+
 
     public PredictiveNetworkInitAndLearn() {
-        createLearningData();
+        loadDataFromFiles('a');
     }
 
     public static void main(String[] args) {
 
 
         PredictiveNetworkInitAndLearn rootPoint = new PredictiveNetworkInitAndLearn();
-        //rootPoint.createLearningData();
-        FunctionEncountingNodesInterface func = new SigmoidFunction();
-        //FunctionEncountingNodesInterface func = new BipolarSigmoidFunction();
+        //FunctionEncountingNodesInterface func = new SigmoidFunction();
+        FunctionEncountingNodesInterface func = new BipolarSigmoidFunction();
 
-        rootPoint.learningNetwork(1, 1,
-                4, 0.00000000000000000000000000000000000000999d
-                , 0.15d, func);
+        //rootPoint.loadDataFromFiles('a');
+
+        rootPoint.learningNetwork(rootPoint.learningData.get(0).size(), rootPoint.outputData.get(0).size(),
+                2, 0.00000000000000000000000000000000000000999d
+                , 0.0001d, func);
+
+    }
+
+
+    public void loadDataFromFiles(Character letter){
+
+        List<NeuralNetForImages> imagesList =
+                ImagesClassificatorSerializator.getInputDataFromFile("learnClass_" + letter + ".net");
+
+        for (int i = 0; i < imagesList.size(); i++) {
+            this.learningData.add(imagesList.get(i).getInputNet());
+            this.outputData.add(imagesList.get(i).getOutNet());
+        }
 
     }
 
@@ -34,23 +56,13 @@ public class PredictiveNetworkInitAndLearn implements Serializable {
     public void learningNetwork(int numNeuronsInput, int numNeuronsOutput, int numHiddenLayers
                             , Double stepLearning, Double midSquareError, FunctionEncountingNodesInterface func) {
 
-        NeuralNetI predictiveNetwork = new PredictiveNetwork(numNeuronsInput, numNeuronsOutput,
+        NeuralNetI predictiveNetwork = new ImageClassificatorNetwork(numNeuronsInput, numNeuronsOutput,
                 numHiddenLayers, stepLearning, midSquareError, func);
-     /*   predictiveNetwork.incrementNodes();
-        predictiveNetwork.incrementNodes();
-        predictiveNetwork.incrementNodes();
-        predictiveNetwork.incrementNodes();
-        predictiveNetwork.incrementNodes();
-        predictiveNetwork.incrementNodes();
-        predictiveNetwork.incrementNodes();
-        predictiveNetwork.incrementNodes();
-        predictiveNetwork.incrementNodes();
-*/
 
-        System.out.println(predictiveNetwork + "\n\n\n");
+
+//        System.out.println(predictiveNetwork + "\n\n\n");
 
         Double midSqr = 0.0d;
-        //Double growError = Double.MAX_VALUE;
 
         List<List<Double>> inpData = new ArrayList<>();
         List<List<Double>> outData = new ArrayList<>();
@@ -63,12 +75,9 @@ public class PredictiveNetworkInitAndLearn implements Serializable {
             outData.add(this.outputData.get(i));
 
             int score = 0;
-            //int scoreGrowError = 0;
+
             do {
                 midSqr = 0.0d;
-
-               // growError = 0.0d;
-
                 for (int j = 0; j < inpData.size(); j++) {
                     inputNet = inpData.get(j);
                     outputNet = outData.get(j);
@@ -77,56 +86,36 @@ public class PredictiveNetworkInitAndLearn implements Serializable {
                     predictiveNetwork.encountNetErrors(inputNet, outputNet);
                     predictiveNetwork.encountWeight();
                 }
-
                 midSqr = predictiveNetwork.encountMidSquareError(inpData, outData);
-                //midSqr = predictiveNetwork.encountMaxError(inpData, outData);
-
-               /* if(growError >= midSqr){
-                    //growError = midSqr;
-                    scoreGrowError = 0;
-                } else {
-                    growError = midSqr;
-                    scoreGrowError++;
-                }
-
-                if (scoreGrowError > 10){
-                    predictiveNetwork.incrementNewLayer();
-                    System.out.println("new layer = " + predictiveNetwork.getNumberHiddenLayers() + "\n num = " + (i + 1) + "\n\n\n");
-                    growError = 0.0d;
-                    scoreGrowError = 0;
-                    //i = 0;
-                    midSqr = 0.0d;
-                }
-*/
                 score++;
                 if (score > 0) {
                     System.out.println("error = " + midSqr + "\n num = " + (i + 1) + "\n\n\n");
                     predictiveNetwork.incrementNodes();
-
                     score = 0;
                 }
-
                 score++;
             } while (midSqr > (predictiveNetwork.getMidSquareError() + (i / 10)));
 
-        //} while (midSqr > predictiveNetwork.getMidSquareError());
+
 
         }
-           // System.out.println(predictiveNetwork + "\n\n");
+
             System.out.println("Number neurons in the each hidden layer = " + predictiveNetwork.getNumberNeuronsInHiddenLayer() + "\n\n");
         System.out.println("Number lsyers in hidden layers = " + predictiveNetwork.getNumberHiddenLayers() + "\n\n");
 
             System.out.println("error = " + midSqr + "\n\n\n");
             for (List<Double> learn : this.learningData){
-                System.out.println("input = " + learn + "      output = " + predictiveNetwork.encountNet(learn));
+                System.out.println("input = "
+                        //+ learn
+                        + "      output = " + predictiveNetwork.encountNet(learn));
             }
 
 
-        PredictiveNetworkSerializator predictiveNetworkSerializator = new PredictiveNetworkSerializator();
-        predictiveNetworkSerializator.writePredictiveNetworkToFile((PredictiveNetwork) predictiveNetwork, "fibonacci.net");
+/*        PredictiveNetworkSerializator predictiveNetworkSerializator = new PredictiveNetworkSerializator();
+        predictiveNetworkSerializator.writePredictiveNetworkToFile((PredictiveNetwork) predictiveNetwork, "fibonacci.net");*/
     }
 
-    public void createLearningData(){
+  /*  public void createLearningData(){
 
 
         Double [] inputArray = new Double[]
@@ -157,5 +146,5 @@ public class PredictiveNetworkInitAndLearn implements Serializable {
         predictiveNetworkSerializator.writeInputDataToFile(this.outputData,"fibonacciOutput.dat");
 
     }
-
+*/
     }

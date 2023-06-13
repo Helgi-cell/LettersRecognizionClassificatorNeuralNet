@@ -2,7 +2,9 @@ package service;
 
 import Api.FinctionsApi.FunctionEncountingNodesInterface;
 
-public class BipolarSigmoidFunction implements FunctionEncountingNodesInterface {
+import java.io.Serializable;
+
+public class BipolarSigmoidFunction implements FunctionEncountingNodesInterface, Serializable {
     @Override
     public Double nodeResult(Double argument) {
         return 2.0d / (1.0d + Math.exp(argument * (-1.0d))) - 1.0d;

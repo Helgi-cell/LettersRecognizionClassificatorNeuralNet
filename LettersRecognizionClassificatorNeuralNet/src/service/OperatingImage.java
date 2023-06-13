@@ -10,8 +10,8 @@ import java.util.List;
 
 public class OperatingImage {
 
-    private List<Double> inputLearningImage = new ArrayList<>();
-    private List<Double> outputLearningImage = new ArrayList<>();
+ /*   private List<Double> inputLearningImage = new ArrayList<>();
+    private List<Double> outputLearningImage = new ArrayList<>();*/
 
     public List<List<Double>> learnInputData = new ArrayList<>();
     public List<List<Double>> learnOutputData = new ArrayList<>();
