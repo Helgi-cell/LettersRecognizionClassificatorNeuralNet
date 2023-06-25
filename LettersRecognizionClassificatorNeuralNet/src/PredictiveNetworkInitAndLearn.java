@@ -2,11 +2,13 @@ import Api.FinctionsApi.FunctionEncountingNodesInterface;
 import Api.NeuralNetApi.NeuralNetI;
 import Entity.network.ImageClassificatorNetwork;
 
+
 import serializator.ImagesClassificatorSerializator;
 import service.BipolarSigmoidFunction;
 import service.NeuralNetForImages;
 import service.SigmoidFunction;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,60 +23,69 @@ public class PredictiveNetworkInitAndLearn implements Serializable {
 
 
     public PredictiveNetworkInitAndLearn() {
-        loadDataFromFiles('a');
+        loadDataFromFiles(this.letters);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
 
         PredictiveNetworkInitAndLearn rootPoint = new PredictiveNetworkInitAndLearn();
-        //FunctionEncountingNodesInterface func = new SigmoidFunction();
+       // FunctionEncountingNodesInterface func = new SigmoidFunction();
         FunctionEncountingNodesInterface func = new BipolarSigmoidFunction();
 
-        //rootPoint.loadDataFromFiles('a');
+        //rootPoint.loadDataFromFiles(rootPoint.letters);
 
         rootPoint.learningNetwork(rootPoint.learningData.get(0).size(), rootPoint.outputData.get(0).size(),
-                2, 0.00000000000000000000000000000000000000999d
-                , 0.0001d, func);
+                2, 0.0019d //0.00019d
+                , 0.0005d, func);
 
     }
 
 
-    public void loadDataFromFiles(Character letter){
+    public void loadDataFromFiles(Character[] letters){
 
-        List<NeuralNetForImages> imagesList =
-                ImagesClassificatorSerializator.getInputDataFromFile("learnClass_" + letter + ".net");
-
-        for (int i = 0; i < imagesList.size(); i++) {
-            this.learningData.add(imagesList.get(i).getInputNet());
-            this.outputData.add(imagesList.get(i).getOutNet());
-        }
-
+        List<List<NeuralNetForImages>> allImages = new ArrayList<>();
+        List<NeuralNetForImages> imagesList = new ArrayList<>();
+                for (Character letter : letters) {
+                    imagesList = ImagesClassificatorSerializator.getInputDataFromFile("learnClass_" + letter + ".net");
+                    allImages.add(imagesList);
+                }
+                for (List<NeuralNetForImages> images : allImages) {
+                    for (int i = 0; i < images.size(); i++) {
+                        this.learningData.add(images.get(i).getInputNet());
+                        this.outputData.add(images.get(i).getOutNet());
+                    }
+                }
     }
 
 
     public void learningNetwork(int numNeuronsInput, int numNeuronsOutput, int numHiddenLayers
-                            , Double stepLearning, Double midSquareError, FunctionEncountingNodesInterface func) {
+                            , Double stepLearning, Double midSquareError, FunctionEncountingNodesInterface func) throws IOException {
 
-        NeuralNetI predictiveNetwork = new ImageClassificatorNetwork(numNeuronsInput, numNeuronsOutput,
-                numHiddenLayers, stepLearning, midSquareError, func);
+        ImageClassificatorNetwork predictiveNetwork;
 
+        predictiveNetwork = ImagesClassificatorSerializator.getPredictiveNetworkFromFile("neuralNetWork.net");
 
-//        System.out.println(predictiveNetwork + "\n\n\n");
+        if (predictiveNetwork == null) {
+            predictiveNetwork = new ImageClassificatorNetwork(numNeuronsInput, numNeuronsOutput,
+                    numHiddenLayers, stepLearning, midSquareError, func);
+        }
 
         Double midSqr = 0.0d;
+        Double maxError = Double.MAX_VALUE;
 
         List<List<Double>> inpData = new ArrayList<>();
         List<List<Double>> outData = new ArrayList<>();
         List<Double> inputNet = new ArrayList<>();
         List<Double> outputNet = new ArrayList<>();
-
+        int ifMustToWriteNetwork;// = 0;
 
         for (int i = 0; i < this.learningData.size(); i++) {
             inpData.add(this.learningData.get(i));
             outData.add(this.outputData.get(i));
 
             int score = 0;
+            ifMustToWriteNetwork = 0;
 
             do {
                 midSqr = 0.0d;
@@ -87,18 +98,58 @@ public class PredictiveNetworkInitAndLearn implements Serializable {
                     predictiveNetwork.encountWeight();
                 }
                 midSqr = predictiveNetwork.encountMidSquareError(inpData, outData);
-                score++;
-                if (score > 0) {
-                    System.out.println("error = " + midSqr + "\n num = " + (i + 1) + "\n\n\n");
+                //score++;
+
+                if (maxError > midSqr) {
+                    score = 0;
+                    maxError = midSqr;
+                } else {
+                    score ++;
+                    maxError = midSqr;
+                }
+
+
+                System.out.println("score = " + score + " error = " + midSqr + "\n num = " + (i + 1)
+                        + "\n   ifMustToWriteFile = " + ifMustToWriteNetwork + "\n\n\n");
+                if (score > 5) {
+                    System.out.println("NEW!!!! neuron ! error = "
+                            + midSqr + "\n num = " + (i + 1)
+                            + "\n\n\n");
                     predictiveNetwork.incrementNodes();
                     score = 0;
+                    //ifMustToWriteNetwork = 0;
                 }
-                score++;
-            } while (midSqr > (predictiveNetwork.getMidSquareError() + (i / 10)));
 
 
+                if(ifMustToWriteNetwork == 1000) {
+                    ifMustToWriteNetwork = 0;
+                    ImagesClassificatorSerializator.deleteFile("neuralNetWork.net");
+                    System.out.println("The file started to write....");
+                    ImagesClassificatorSerializator.writePredictiveNetworkToFile(
+                                                                predictiveNetwork
+                                                                ,"neuralNetWork.net");
+                    System.out.println("The file have been written....");
+                }
+                ifMustToWriteNetwork++;
+                //score++;
+            } while (midSqr > (predictiveNetwork.getMidSquareError()// * (i + 1)/2//
+                     ));
 
+
+            ImagesClassificatorSerializator.deleteFile("neuralNetWork.net");
+            System.out.println("The file started to write....");
+            ImagesClassificatorSerializator.writePredictiveNetworkToFile(
+                    predictiveNetwork
+                    ,"neuralNetWork.net");
+            System.out.println("The file have been written....");
+
+
+           // predictiveNetworkSerializator.writePredictiveNetworkToFile(predictiveNetwork,"neuralNet.net");
         }
+
+
+        //predictiveNetworkSerializator.writePredictiveNetworkToFile(predictiveNetwork,"neuralNet.net");
+
 
             System.out.println("Number neurons in the each hidden layer = " + predictiveNetwork.getNumberNeuronsInHiddenLayer() + "\n\n");
         System.out.println("Number lsyers in hidden layers = " + predictiveNetwork.getNumberHiddenLayers() + "\n\n");
@@ -111,40 +162,26 @@ public class PredictiveNetworkInitAndLearn implements Serializable {
             }
 
 
+            this.learningData.clear();
+            loadDataFromFiles(this.letters);
+
+        System.out.println("For letter i results :");
+        for (List<Double> learn : this.learningData){
+            System.out.println("input = "
+                    //+ learn
+                    + "      output = " + predictiveNetwork.encountNet(learn));
+        }
+
+
+
+
 /*        PredictiveNetworkSerializator predictiveNetworkSerializator = new PredictiveNetworkSerializator();
         predictiveNetworkSerializator.writePredictiveNetworkToFile((PredictiveNetwork) predictiveNetwork, "fibonacci.net");*/
     }
 
-  /*  public void createLearningData(){
-
-
-        Double [] inputArray = new Double[]
-                {1.0, 2.0, 3.0, 5.0, 8.0, 13.0, 21.0, 34.0, 55.0, 89.0, 144.0, 233.0, 377.0, 610.0
-                         };
-        Double [] outputArray = new Double[]
-                {2.0, 3.0, 5.0, 8.0, 13.0, 21.0, 34.0, 55.0, 89.0, 144.0, 233.0, 377.0, 610.0, 987.0
-                         };
 
 
 
-        for (int i = 0 ; i < inputArray.length; i++){
-             List<Double> learning = new ArrayList<>();
-             learning.add(inputArray[i]);
-             this.learningData.add(learning);
-         }
 
 
-        for (int i = 0 ; i < outputArray.length; i++){
-            List<Double> learning = new ArrayList<>();
-            learning.add(outputArray[i]);
-            this.outputData.add(learning);
-        }
-
-        PredictiveNetworkSerializator predictiveNetworkSerializator = new PredictiveNetworkSerializator();
-
-        predictiveNetworkSerializator.writeInputDataToFile(this.learningData,"fibonacciInput.dat");
-        predictiveNetworkSerializator.writeInputDataToFile(this.outputData,"fibonacciOutput.dat");
-
-    }
-*/
     }

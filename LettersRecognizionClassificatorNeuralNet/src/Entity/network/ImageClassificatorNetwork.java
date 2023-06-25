@@ -28,17 +28,18 @@ public class ImageClassificatorNetwork implements NeuralNetI, Serializable {
     private Stack<List<Double>> thresholdStack = new Stack<>();
 
 
+    public ImageClassificatorNetwork() {
+    }
 
     public ImageClassificatorNetwork(Integer numNeuronsInputLayer, Integer nimNeuronsOutputLayer,
-                             Integer numHiddenLayers, Double stepLearnimg, Double midSquareError,
-                             FunctionEncountingNodesInterface func) {
+                                     Integer numHiddenLayers, Double stepLearnimg, Double midSquareError,
+                                     FunctionEncountingNodesInterface func) {
         this.stepLearnimg = stepLearnimg;
         this.midSquareError = midSquareError;
         this.func = func;
         initNetwork(numNeuronsInputLayer, nimNeuronsOutputLayer, numHiddenLayers);
 
     }
-
 
 
     @Override
@@ -299,6 +300,7 @@ public class ImageClassificatorNetwork implements NeuralNetI, Serializable {
         return this.layers;
     }
 
+
     public List<LayerCommonI> getLayers() {
         return layers;
     }
@@ -353,6 +355,73 @@ public class ImageClassificatorNetwork implements NeuralNetI, Serializable {
         this.derivatives = derivatives;
     }
 
+    public List<List<Double>> getNetErrors() {
+        return netErrors;
+    }
+
+    public void setNetErrors(List<List<Double>> netErrors) {
+        this.netErrors = netErrors;
+    }
+
+    public Stack<List<Double>> getNodesStack() {
+        return nodesStack;
+    }
+
+    public void setNodesStack(Stack<List<Double>> nodesStack) {
+        this.nodesStack = nodesStack;
+    }
+
+    public Stack<List<Double>> getDerivateStack() {
+        return derivateStack;
+    }
+
+    public void setDerivateStack(Stack<List<Double>> derivateStack) {
+        this.derivateStack = derivateStack;
+    }
+
+    public Stack<List<Double>> getErrorsStack() {
+        return errorsStack;
+    }
+
+    public void setErrorsStack(Stack<List<Double>> errorsStack) {
+        this.errorsStack = errorsStack;
+    }
+
+    public Stack<List<List<Double>>> getWeigthStack() {
+        return weigthStack;
+    }
+
+    public void setWeigthStack(Stack<List<List<Double>>> weigthStack) {
+        this.weigthStack = weigthStack;
+    }
+
+    public Stack<List<Double>> getThresholdStack() {
+        return thresholdStack;
+    }
+
+    public void setThresholdStack(Stack<List<Double>> thresholdStack) {
+        this.thresholdStack = thresholdStack;
+    }
+
+    @Override
+    public ImageClassificatorNetwork cloneNetwork(ImageClassificatorNetwork imageClassificatorNetwork){
+        ImageClassificatorNetwork imageClassificatorNetwork1 = new ImageClassificatorNetwork();
+
+        imageClassificatorNetwork1.setLayers(imageClassificatorNetwork.getLayers());
+        imageClassificatorNetwork1.setDerivatives(imageClassificatorNetwork.getDerivatives());
+        imageClassificatorNetwork1.setNetErrors(imageClassificatorNetwork.getNetErrors());
+        imageClassificatorNetwork1.setThresholdStack(imageClassificatorNetwork.getThresholdStack());
+        imageClassificatorNetwork1.setFunc(imageClassificatorNetwork.getFunc());
+        imageClassificatorNetwork1.setDerivateStack(imageClassificatorNetwork.getDerivateStack());
+        imageClassificatorNetwork1.setErrorsStack(imageClassificatorNetwork.getErrorsStack());
+        imageClassificatorNetwork1.setNodesStack(imageClassificatorNetwork.getNodesStack());
+        imageClassificatorNetwork1.setWeigthStack(imageClassificatorNetwork.getWeigthStack());
+        imageClassificatorNetwork1.setMidSquareError(imageClassificatorNetwork.getMidSquareError());
+        imageClassificatorNetwork1.setStepLearnimg(imageClassificatorNetwork.getStepLearnimg());
+
+
+        return imageClassificatorNetwork1;
+    }
 
 
     @Override

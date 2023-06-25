@@ -1,18 +1,29 @@
 package serializator;
 
 
+import Api.NeuralNetApi.NeuralNetI;
+import Entity.network.ImageClassificatorNetwork;
 import service.NeuralNetForImages;
 
 import java.io.*;
 import java.util.List;
-//import Image.ImagesNeuralNet;
 
-public  class ImagesClassificatorSerializator {
-    /*public ClassificatorImagesSerializator() {
+
+public class ImagesClassificatorSerializator {
+
+public static boolean deleteFile(String filename){
+    File file = new File(filename);
+    Boolean isFileExist = false;
+    if (file.isFile()){
+        file.delete();
+
     }
-*/
-    /*
-    public void writePredictiveNetworkToFile(PredictiveNetwork neuralNet , String filename) {
+        return isFileExist;
+}
+
+    public static void writePredictiveNetworkToFile(ImageClassificatorNetwork neuralNet , String filename) throws IOException {
+
+
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
 
             oos.writeObject(neuralNet);
@@ -22,19 +33,28 @@ public  class ImagesClassificatorSerializator {
         }
     }
 
-    public PredictiveNetwork getPredictiveNetworkFromFile(String filename){
-        PredictiveNetwork neuralNet = null;
-        try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename)))
-        {
-            PredictiveNetwork  neural = (PredictiveNetwork) ois.readObject();
-            neuralNet = neural;
-        }
-        catch(Exception ex){
-            System.out.println(ex.getMessage());
-        }
 
+    public static ImageClassificatorNetwork getPredictiveNetworkFromFile(String filename){
+
+        File file = new File(filename);
+        Boolean isFileExist = false;
+
+        if (file.exists()){
+            isFileExist = true;
+        }
+        ImageClassificatorNetwork neuralNet = null;
+        if(isFileExist) {
+
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
+                ImageClassificatorNetwork neural = (ImageClassificatorNetwork) ois.readObject();
+                neuralNet = neural;
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
         return neuralNet;
-    }*/
+    }
+
 
 
     public static void writeInputDataToFile(List<NeuralNetForImages> inputData, String filename) {

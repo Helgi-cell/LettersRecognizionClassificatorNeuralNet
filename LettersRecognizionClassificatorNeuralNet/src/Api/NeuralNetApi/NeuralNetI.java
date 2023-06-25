@@ -2,6 +2,7 @@ package Api.NeuralNetApi;
 
 import Api.FinctionsApi.FunctionEncountingNodesInterface;
 import Api.LayersApi.LayerCommonI;
+import Entity.network.ImageClassificatorNetwork;
 
 import java.util.List;
 
@@ -26,4 +27,6 @@ public interface NeuralNetI {
     Integer getNumberHiddenLayers();
 
     List<LayerCommonI> incrementNewLayer();
+
+    public ImageClassificatorNetwork cloneNetwork(ImageClassificatorNetwork imageClassificatorNetwork);
 }

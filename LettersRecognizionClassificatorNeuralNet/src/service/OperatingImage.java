@@ -67,8 +67,11 @@ public class OperatingImage {
         for(int y = 0; y < height1; y++) {
             for(int x = 0; x < width1; x++) {
                 pixels2D[x][y] = pixels[y * width1 + x];
+
+             //   arr.add((pixels2D[x][y])*1.0d);
+
                 if (Math.abs(pixels2D[x][y] * 1.0d ) > 1d){
-                    arr.add(1.99d);
+                    arr.add(0.99d);
                 } else {
                     arr.add((0.01d));
                 }
