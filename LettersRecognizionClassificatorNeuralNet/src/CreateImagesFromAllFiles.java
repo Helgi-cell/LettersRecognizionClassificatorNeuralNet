@@ -14,9 +14,7 @@ public class CreateImagesFromAllFiles {
     public static void main(String[] args) throws IOException, InterruptedException {
 
 
-        Character[] letters = new Character[] { 'a'//, 'o', 'i' , 't', 'm' , 'w'
-
-                                                };
+        Character[] letters = new Character[] {'a', 'o', 'i', 't', 'm', 'w'};
 
         for (int i = 0; i < letters.length; i++){
 

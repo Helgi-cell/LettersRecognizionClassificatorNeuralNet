@@ -9,10 +9,15 @@ public class TestImagesNetwork {
 
     public static void main(String [] args){
 
-        Character[] isLetter = new Character[] { 'a', 'o', 'i' , 't', 'm' , 'w'
+        Character[] isLetter = new Character[] { 'a','o','i' , 't', 'm' , 'w'
         };
         List<List<Double>> learningData = new ArrayList<>();
-        Character[] letters = new Character[] { 'a'//, 'o', 'i' , 't', 'm' , 'w'
+        Character[] letters = new Character[] { //'a',
+                                               // 'o'//,
+                                                 'i' // ,
+                                               //  't'//,
+                                               //   'm'// ,
+                                                 //   'w'
         };
 
 
