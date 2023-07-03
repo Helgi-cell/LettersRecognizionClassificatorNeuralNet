@@ -68,8 +68,8 @@ public class PredictiveNetworkInitAndLearn implements Serializable {
 
         List<List<Double>> inpData = new ArrayList<>();
         List<List<Double>> outData = new ArrayList<>();
-        List<Double> inputNet = new ArrayList<>();
-        List<Double> outputNet = new ArrayList<>();
+        List<Double> inputNet;// = new ArrayList<>();
+        List<Double> outputNet;// = new ArrayList<>();
         int ifMustToWriteNetwork;
 
         for (int i = 0; i < this.learningData.size(); i++) {
