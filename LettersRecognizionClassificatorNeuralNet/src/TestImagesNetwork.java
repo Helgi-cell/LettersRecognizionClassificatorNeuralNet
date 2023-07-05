@@ -12,12 +12,12 @@ public class TestImagesNetwork {
         Character[] isLetter = new Character[] { 'a','o','i' , 't', 'm' , 'w'
         };
         List<List<Double>> learningData = new ArrayList<>();
-        Character[] letters = new Character[] { //'a',
-                                               // 'o'//,
-                                                 'i' // ,
-                                               //  't'//,
-                                               //   'm'// ,
-                                                 //   'w'
+        Character[] letters = new Character[] { 'a',
+                                                'o',
+                                                 'i',
+                                                 't',
+                                                 'm',
+                                                  'w'
         };
 
 
@@ -34,11 +34,18 @@ public class TestImagesNetwork {
             }
         }
 
-        ImageClassificatorNetwork network = ImagesClassificatorSerializator.getPredictiveNetworkFromFile("neuralNetWorkFullImage.net");
+        ImageClassificatorNetwork network =
+                ImagesClassificatorSerializator.getPredictiveNetworkFromFile("neuralNetWorkImage_a.net");
 
         List<Character> res = new ArrayList<>();
 
-        System.out.println("For letter i results :");
+        System.out.println("For letter  results :");
+
+        for (List<Double> learn : learningData){
+
+            System.out.println(network.encountNet(learn));
+        }
+
         for (List<Double> learn : learningData){
             List<Double> output = network.encountNet(learn);
             Double max = Double.MIN_VALUE;
@@ -56,6 +63,8 @@ public class TestImagesNetwork {
 
         System.out.println("input = "
                 + "      output = " + res);
+
+
 
 
     }

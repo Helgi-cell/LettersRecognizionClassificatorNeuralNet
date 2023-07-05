@@ -19,7 +19,8 @@ public class PredictiveNetworkInitAndLearn implements Serializable {
 
 
     public PredictiveNetworkInitAndLearn() {
-        loadDataFromFiles(this.letters);
+        //loadDataFromFiles(this.letters);
+        loadDataFromFiles();
     }
 
     public static void main(String[] args) throws IOException {
@@ -51,12 +52,28 @@ public class PredictiveNetworkInitAndLearn implements Serializable {
     }
 
 
+    public void loadDataFromFiles(){
+
+        List<List<NeuralNetForImages>> allImages = new ArrayList<>();
+        List<NeuralNetForImages> imagesList = new ArrayList<>();
+
+            imagesList = ImagesClassificatorSerializator.getInputDataFromFile("learnClass_a.net");
+            allImages.add(imagesList);
+
+        for (List<NeuralNetForImages> images : allImages) {
+            for (int i = 0; i < images.size(); i++) {
+                this.learningData.add(images.get(i).getInputNet());
+                this.outputData.add(images.get(i).getOutNet());
+            }
+        }
+    }
+
     public void learningNetwork(int numNeuronsInput, int numNeuronsOutput, int numHiddenLayers
                             , Double stepLearning, Double midSquareError, FunctionEncountingNodesInterface func) throws IOException {
 
         ImageClassificatorNetwork predictiveNetwork;
 
-        predictiveNetwork = ImagesClassificatorSerializator.getPredictiveNetworkFromFile("neuralNetWorkFullImage.net");
+        predictiveNetwork = ImagesClassificatorSerializator.getPredictiveNetworkFromFile("neuralNetWorkImage_a.net");
 
         if (predictiveNetwork == null) {
             predictiveNetwork = new ImageClassificatorNetwork(numNeuronsInput, numNeuronsOutput,
@@ -126,12 +143,12 @@ public class PredictiveNetworkInitAndLearn implements Serializable {
                      ));
 
 
-            ImagesClassificatorSerializator.deleteFile("neuralNetWorkFullImage.net");
+            ImagesClassificatorSerializator.deleteFile("neuralNetWorkImage_a.net");
             System.out.println("The file neuralNetWorkFullImage.net started to write....");
             ImagesClassificatorSerializator.writePredictiveNetworkToFile(
                     predictiveNetwork
-                    ,"neuralNetWorkFullImage.net");
-            System.out.println("The file neuralNetWorkFullImage.net have been written....");
+                    ,"neuralNetWorkImage_a.net");
+            System.out.println("The file neuralNetWorkImage_a.net have been written....");
         }
 
             System.out.println("Number neurons in the each hidden layer = " + predictiveNetwork.getNumberNeuronsInHiddenLayer() + "\n\n");
