@@ -18,6 +18,8 @@ public class PredictiveNetworkInitAndLearn implements Serializable {
     };
 
 
+    String filenameinp = "learnClass_i.net";
+    String filenameNet = "neuralNetWorkImage_i.net";
     public PredictiveNetworkInitAndLearn() {
         //loadDataFromFiles(this.letters);
         loadDataFromFiles();
@@ -57,7 +59,7 @@ public class PredictiveNetworkInitAndLearn implements Serializable {
         List<List<NeuralNetForImages>> allImages = new ArrayList<>();
         List<NeuralNetForImages> imagesList = new ArrayList<>();
 
-            imagesList = ImagesClassificatorSerializator.getInputDataFromFile("learnClass_a.net");
+            imagesList = ImagesClassificatorSerializator.getInputDataFromFile(filenameinp);
             allImages.add(imagesList);
 
         for (List<NeuralNetForImages> images : allImages) {
@@ -73,7 +75,8 @@ public class PredictiveNetworkInitAndLearn implements Serializable {
 
         ImageClassificatorNetwork predictiveNetwork;
 
-        predictiveNetwork = ImagesClassificatorSerializator.getPredictiveNetworkFromFile("neuralNetWorkImage_a.net");
+
+        predictiveNetwork = ImagesClassificatorSerializator.getPredictiveNetworkFromFile(filenameNet);
 
         if (predictiveNetwork == null) {
             predictiveNetwork = new ImageClassificatorNetwork(numNeuronsInput, numNeuronsOutput,
@@ -143,12 +146,12 @@ public class PredictiveNetworkInitAndLearn implements Serializable {
                      ));
 
 
-            ImagesClassificatorSerializator.deleteFile("neuralNetWorkImage_a.net");
+            ImagesClassificatorSerializator.deleteFile(filenameNet);
             System.out.println("The file neuralNetWorkFullImage.net started to write....");
             ImagesClassificatorSerializator.writePredictiveNetworkToFile(
                     predictiveNetwork
-                    ,"neuralNetWorkImage_a.net");
-            System.out.println("The file neuralNetWorkImage_a.net have been written....");
+                    ,filenameNet);
+            System.out.println("The file "+ filenameNet +" have been written....");
         }
 
             System.out.println("Number neurons in the each hidden layer = " + predictiveNetwork.getNumberNeuronsInHiddenLayer() + "\n\n");

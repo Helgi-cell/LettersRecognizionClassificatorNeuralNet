@@ -73,7 +73,7 @@ public class OperatingImage {
                 if (Math.abs(pixels2D[x][y] * 1.0d ) > 1d){
                     arr.add(0.99d);
                 } else {
-                    arr.add((0.01d));
+                    arr.add((-0.99d));
                 }
             }
         }

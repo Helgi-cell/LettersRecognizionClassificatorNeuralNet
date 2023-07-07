@@ -23,9 +23,9 @@ public class CreateImagesFromAllFiles {
             List<Double> outByLetter = new ArrayList<>();
             for (int j = 0; j < letters.length; j++) {
                 if (j == i) {
-                    outByLetter.add(i, 0.99d);
+                    outByLetter.add(i, 1.00d);
                 } else {
-                    outByLetter.add(0.01);
+                    outByLetter.add(-1.00);
                 }
             }
 
