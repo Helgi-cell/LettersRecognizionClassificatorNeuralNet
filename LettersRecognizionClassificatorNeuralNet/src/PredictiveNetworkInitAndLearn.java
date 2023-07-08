@@ -18,8 +18,8 @@ public class PredictiveNetworkInitAndLearn implements Serializable {
     };
 
 
-    String filenameinp = "learnClass_i.net";
-    String filenameNet = "neuralNetWorkImage_i.net";
+    String filenameinp = "learnClass_w.net";
+    String filenameNet = "neuralNetWorkImage_w.net";
     public PredictiveNetworkInitAndLearn() {
         //loadDataFromFiles(this.letters);
         loadDataFromFiles();

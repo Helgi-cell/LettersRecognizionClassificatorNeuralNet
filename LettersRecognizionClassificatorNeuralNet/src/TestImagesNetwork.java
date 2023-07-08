@@ -15,10 +15,10 @@ public class TestImagesNetwork {
         List<List<Double>> learningData = new ArrayList<>();
         Character[] letters = new Character[] { 'a' ,
                                                 'o',
-                                                 'i'/*,
+                                                 'i',
                                                  't',
                                                  'm',
-                                                  'w'*/
+                                                  'w'
         };
 
         List<ImageClassificatorNetwork> networks = new ArrayList<>();
