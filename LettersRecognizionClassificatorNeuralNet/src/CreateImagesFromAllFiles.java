@@ -37,8 +37,8 @@ public class CreateImagesFromAllFiles {
                 arrTemplates.add(new NeuralNetForImages(letters[i], input, outByLetter));
             }
 
-            ImagesClassificatorSerializator.writeInputDataToFile(arrTemplates, "learnClass_" + letters[i] + ".net");
-            arrTemplates = ImagesClassificatorSerializator.getInputDataFromFile("learnClass_" + letters[i] + ".net");
+            ImagesClassificatorSerializator.writeInputDataToFile(arrTemplates, "testClass_" + letters[i] + ".net");
+            arrTemplates = ImagesClassificatorSerializator.getInputDataFromFile("testClass_" + letters[i] + ".net");
 
             System.out.println(arrTemplates.size());
         }

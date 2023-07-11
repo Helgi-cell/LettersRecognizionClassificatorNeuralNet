@@ -30,7 +30,7 @@ public class TestImagesNetwork {
         List<List<NeuralNetForImages>> allImages = new ArrayList<>();
         List<NeuralNetForImages> imagesList;// = new ArrayList<>();
         for (Character letter : letters) {
-            imagesList = ImagesClassificatorSerializator.getInputDataFromFile("learnClass_" + letter + ".net");
+            imagesList = ImagesClassificatorSerializator.getInputDataFromFile("testClass_" + letter + ".net");
             allImages.add(imagesList);
         }
         for (List<NeuralNetForImages> images : allImages) {

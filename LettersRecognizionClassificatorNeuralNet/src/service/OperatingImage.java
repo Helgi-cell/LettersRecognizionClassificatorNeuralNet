@@ -19,7 +19,7 @@ public class OperatingImage {
 
     public OperatingImage(Character character) throws IOException, InterruptedException {
 
-        File folder = new File("images/" + character + "/");
+        File folder = new File("images/test/" + character + "/");
         File[] files = folder.listFiles();
         for (File file : files) {
             if (file.isFile()) {
@@ -47,7 +47,7 @@ public class OperatingImage {
     }
 
     public BufferedImage readFromFile(String fileName) throws IOException {
-        File sourceimage = new File("images/a/" + fileName);
+        File sourceimage = new File("images/test/a/" + fileName);
         BufferedImage image = ImageIO.read(sourceimage);
         return image;
     }
